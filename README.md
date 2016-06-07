@@ -10,7 +10,9 @@ ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beaut
 ### Defining Models
 Models in Rabit ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Rabbit\Model` class.
 
-*Example:* Model for table user, located in `models/user.php`
+*Example:* Model for table user, located in `models/User.php`
+
+Remember: CodeIgniter 3 adopts a Ucfirst-like filename convetion. Class `User` must be named as `User.php` and class `MyClass` must be named as `Myclass.php`. I admit that is a strange convention - I prefer CamelCase - i believe it was chosen to facilitate the location of classes in case sensitive file systems, but we have to follow the CodeIgniter Convention to maximize compatibility.
 
 ```php
 class User extends RabbitORM\Model {
