@@ -1,6 +1,6 @@
-<?php namespace Elegant;
+<?php namespace RabbitORM;
 
-use Elegant\Helper as Helper;
+use RabbitORM\Helper as Helper;
 
 class Row {
 

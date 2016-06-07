@@ -1,8 +1,8 @@
-<?php namespace Elegant;
+<?php namespace RabbitORM;
 
-use Elegant\QueryBuilder;
-use Elegant\Result;
-use Elegant\Helper;
+use RabbitORM\QueryBuilder;
+use RabbitORM\Result;
+use RabbitORM\Helper;
 
 class Model {
 	protected $ci = null;

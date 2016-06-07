@@ -13,7 +13,7 @@ Models in Rabit ORM (as in other ORMs) represent a single table to work with. To
 *Example:* Model for table user, located in `models/user.php`
 
 ```php
-class User extends Rabbit\Model {
+class User extends RabbitORM\Model {
   protected $table = "user";
 }
 ```
@@ -315,7 +315,7 @@ An example of this relationship is between an `Article` model with a `Tag` model
 To define the relationship, you should do this:
 
 ```php
-class Article extends Elegant\Model {
+class Article extends RabbitORM\Model {
   protected $table = "article";
   
   function tags()
@@ -337,7 +337,7 @@ foreach($article->tags as $tag)
 
 Or you can do vice-versa in `Tag` model:
 ```php
-class Tag extends Elegant\Model {
+class Tag extends RabbitORM\Model {
   protected $table = "tag";
   
   function articles()
@@ -355,7 +355,7 @@ foreach($tag->articles as $article)
 ```
 
 #### Customizing Pivot Table
-By default Elegant will assume that the name of pivot table is the concatenated name of two models using underscore in alphabetical order. So if the models are `Article` and `Tag`, the default pivot table name is `article_tag`.
+By default RabbitORM will assume that the name of pivot table is the concatenated name of two models using underscore in alphabetical order. So if the models are `Article` and `Tag`, the default pivot table name is `article_tag`.
 
 If you want to use another name for the pivot table you can specify in second parameter of the `belongsToMany` method.
 ```php
@@ -391,7 +391,7 @@ Note that you need to call the `comments` as a method (`$article->comments()` in
 
 The second way is by chaining the `hasMany` or `belongsToMany` method right after you define the relationship.
 ```php
-class Article extends Elegant\Model {
+class Article extends RabbitORM\Model {
   protected $table = "article";
   
   function approvedComments()
@@ -424,7 +424,7 @@ $comments = $article->approvedComments()->order_by('date', 'desc')->get();
 ### Using Eager Load
 Eager loading is a technique to reduce the number of queries needed to relate one model to another. Now take a look at this model:
 ```php
-class Article extends Elegant\Model {
+class Article extends RabbitORM\Model {
   protected $table = "article";
   
   function comments()
@@ -458,7 +458,7 @@ SELECT * FROM comment WHERE article_id = 3;
 ...
 ```
 
-To solve that problem, Elegant provides the support for eager loading. Now take a look at this code
+To solve that problem, RabbitORM provides the support for eager loading. Now take a look at this code
 
 ```php
 $articles =  Article::all();
@@ -487,7 +487,7 @@ Sometimes you want to transform some of your model's value when setting or getti
 ### Accessors
 Example of accessors:
 ```php
-class User extends Elegant\Model {
+class User extends RabbitORM\Model {
   protected $table = "user";
   
   function getAttrFirstName($value)
@@ -507,7 +507,7 @@ echo $user->first_name; // will echo something like 'JOHN'
 ### Mutators
 Example of mutators:
 ```php
-class User extends Elegant\Model {
+class User extends RabbitORM\Model {
   protected $table = "user";
   
   function setAttrFirstName($value)
@@ -535,7 +535,7 @@ When you want to declare a mutator/accessor method, here is some rules you need 
 
 Example:
 ```php
-class User extends Elegant\Model {
+class User extends RabbitORM\Model {
   protected $table = "user";
   
   function getAttrLastName($value, $model)
@@ -559,7 +559,7 @@ class User extends Elegant\Model {
 
 ## Miscellaneous
 ### Converting Models to Array / JSON
-The Elegant query result is always returned as a special `Elegant\Result` object. If you wish to work with plain array instead, you may convert is using `toArray()` method.
+The RabbitORM query result is always returned as a special `RabbitORM\Result` object. If you wish to work with plain array instead, you may convert is using `toArray()` method.
 
 ```php
 $users = User::all();
@@ -584,7 +584,7 @@ echo $articles->json();
 
 
 ### Debugging
-If you want to debug your application using CI Profiler class, you should define a constant named `ELEGANT_DEBUG` with value `true` in `config/constants.php` file. Otherwise the queries will not show up in the profiling result.
+If you want to debug your application using CI Profiler class, you should define a constant named `RABBITORM_DEBUG` with value `true` in `config/constants.php` file. Otherwise the queries will not show up in the profiling result.
 ```php
-define('ELEGANT_DEBUG', true);
+define('RABBITORM_DEBUG', true);
 ```

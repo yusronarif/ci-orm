@@ -7,7 +7,7 @@ if(!defined('EXT'))
 }
 
 
-class Elegant {
+class RabbitORM {
 
 	function __construct()
 	{
@@ -46,11 +46,11 @@ class Elegant {
 }
 
 spl_autoload_register(function($class){
-	if(strpos($class, "Elegant\\") === 0)
+	if(strpos($class, "RabbitORM\\") === 0)
 	{
-		$classname = str_replace("Elegant\\", "", $class);
+		$classname = str_replace("RabbitORM\\", "", $class);
 
-		$path = 'src/' . strtolower( str_replace("\\", "/", $classname) ) . EXT;
+		$path = 'src/' . ucfirst(strtolower(str_replace("\\", "/", $classname)) ) . EXT;
 		require_once $path;
 	}
 

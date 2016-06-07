@@ -1,4 +1,4 @@
-<?php namespace Elegant;
+<?php namespace RabbitORM;
 class QueryBuilder {
 
 	protected $db_conn = null;

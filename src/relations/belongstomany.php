@@ -1,7 +1,7 @@
-<?php namespace Elegant\Relations;
+<?php namespace RabbitORM\Relations;
 
-use Elegant\Model;
-use Elegant\QueryBuilder;
+use RabbitORM\Model;
+use RabbitORM\QueryBuilder;
 
 class BelongsToMany extends Relation {
 

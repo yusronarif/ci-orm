@@ -1,6 +1,6 @@
-<?php namespace Elegant\Relations;
+<?php namespace RabbitORM\Relations;
 
-use Elegant\Model;
+use RabbitORM\Model;
 
 class HasMany extends Relation {
 

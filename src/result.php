@@ -1,9 +1,9 @@
-<?php namespace Elegant;
+<?php namespace RabbitORM;
 
 use Countable;
 use ArrayIterator;
 use IteratorAggregate;
-use Elegant\Row;
+use RabbitORM\Row;
 
 class Result implements Countable, IteratorAggregate {
 

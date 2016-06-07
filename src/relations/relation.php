@@ -1,12 +1,12 @@
-<?php namespace Elegant\Relations;
+<?php namespace RabbitORM\Relations;
 
 use Countable;
 use ArrayIterator;
 use IteratorAggregate;
 use EmptyIterator;
-use Elegant\Model;
-use Elegant\Result;
-use Elegant\Row;
+use RabbitORM\Model;
+use RabbitORM\Result;
+use RabbitORM\Row;
 
 abstract class Relation implements Countable, IteratorAggregate {
 
