@@ -1,33 +1,19 @@
-## Project Abandoned
+## Project Alive Again
 
-Hello, thank you for your interest on Elegant ORM for Code Igniter. But I'm really sorry to say that I can't continue to maintain this library. As you may notice there are some issues & pull requests that still waiting to be handled but I just can't find any spare time to check them.
+This project is a fork of elegant-orm of nazieb user, the intent of this fork is initially make it 100% compatible with CodeIgniter 3 and MySQL 5.6+. After starts fixes and support for other databases. The project was renamed to become more independent and does not confuse users. The name was based on the speed and lightness of a rabbit.
 
-If you're still interested in using this library, there are some good folks who forked this project and continue to maintain them, check the Network page (https://github.com/nazieb/elegant-orm/network) to see those forked projects.
+# Rabbit ORM [BETA]
 
-Once again, thank you and good luck!
-
-# Elegant ORM [BETA]
-
-ORM for CodeIgniter based on Laravel's Eloquent. The Elegant ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
-
-## Installation
-
-- Download the zipball of the latest release at https://github.com/nazieb/elegant-orm/releases
-- Extract to your `application/libraries` directory
-- In your `config/autoload.php` file, add `elegant-orm/elegant` to `$autoload['libraries']`. So it will look like this:
-
-  ```php
-  $autoload['libraries'] = array('elegant-orm/elegant');
-  ```
+ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
 
 ## Usage
 ### Defining Models
-Models in Elegant ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Elegant\Model` class.
+Models in Rabit ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Rabbit\Model` class.
 
 *Example:* Model for table user, located in `models/user.php`
 
 ```php
-class User extends Elegant\Model {
+class User extends Rabbit\Model {
   protected $table = "user";
 }
 ```
@@ -85,7 +71,7 @@ echo 'Newest user is: ' . User::order_by('id', 'desc')->pluck('name');
 ```
 
 ### Selecting Specific Columns
-By default Elegant will generate a `SELECT *` query for all examples above. If you think this is a bad practice, you can select only specific columns you need in several ways:
+By default Rabbit will generate a `SELECT *` query for all examples above. If you think this is a bad practice, you can select only specific columns you need in several ways:
 
 ```php
 User::all( array('id', 'username') );
@@ -97,7 +83,7 @@ User::where('status', 1)->first( array('id', 'username') );
 Note: for now `find()` method doesn't support selecting specific column.
 
 ### Aggregates Methods
-Elegant also provides aggregates method, such as `max`, `min`, `avg`, `sum`, and `count`. You can call these methods right away or chain them with some CI Active Records method.
+Rabbit also provides aggregates method, such as `max`, `min`, `avg`, `sum`, and `count`. You can call these methods right away or chain them with some CI Active Records method.
 
 ```php
 $total = User::count();
@@ -187,7 +173,7 @@ Some conventions:
 - At least one parameter is required. This first parameter is a `QueryBuilder` which you can use to call Active Record methods
 
 ```php
-class User extends Elegant\Model {
+class User extends Rabbit\Model {
   protected $table = "user";
   
   function scopeActive($query)
@@ -207,7 +193,7 @@ Note that the method name isn't using `scope` prefix.
 ### Dynamic Scopes
 Scopes can also accept parameters to be used in generating queries.
 ```php
-class User extends Elegant\Model {
+class User extends Rabbit\Model {
   protected $table = "user";
   
   // Search an active user by name
@@ -226,7 +212,7 @@ $search_results = User::search('John')->get();
 #### Defining One to One Relationship
 This the example how to define a one-to-one relationship between a `User` model with `Phone`. In this case, a `User` might have one `Phone`
 ```php
-class User extends Elegant\Model {
+class User extends Rabbit\Model {
   protected $table = "user";
   
   function phone()
@@ -260,7 +246,7 @@ $this->hasOne('Phone', 'custom field name');
 #### Defining the Inverse Relationship
 You can also define the inverse of the relationship. For the example after you get a Phone object, you want to know who is the name owner. In the `Phone` model you have to call the `belongsTo` method.
 ```php
-class Phone extends Elegant\Model {
+class Phone extends Rabbit\Model {
   protected $table = "phone";
   
   function owner()
@@ -281,7 +267,7 @@ You can also define a custom foreign key as second parameter to `belongsTo` meth
 An example of one to many relationship is an article can has one or many comments. To define such relationship, you can do this:
 
 ```php
-class Article extends Elegant\Model {
+class Article extends Rabbit\Model {
   protected $table = "article";
   
   function comments()
@@ -304,7 +290,7 @@ foreach($article->comments() as $comment)
 #### Defining the Inverse Relationship
 As in one to one relationship you can define the inverse relationship between `Comment` and `Article` model.
 ```php
-class Comment extends Elegant\Model {
+class Comment extends Rabbit\Model {
   protected $table = "comment";
   
   function article()
