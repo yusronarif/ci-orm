@@ -16,7 +16,7 @@ class RabbitORM {
 
 	function __construct()
 	{
-		$mod_path = APPPATH . 'models/';
+		$mod_path = APPPATH . 'models' . DIRECTORY_SEPARATOR;
 		if(file_exists($mod_path)) $this->_read_model_dir($mod_path);
 	}
 
@@ -47,12 +47,11 @@ class RabbitORM {
 
 			} elseif(strpos(strtolower($filename), '.php') !== false)
 			{
-
-				if(!$annotationParser->findAnnotion($filename,$this->entityAnnotation)) {
+				if(!$annotationParser->findAnnotion($filepath,$this->entityAnnotation)) {
 					continue;
 				}
 
-				require_once $filename;
+				require_once $filepath;
 			}
 
 			else { continue; }
