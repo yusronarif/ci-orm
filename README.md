@@ -21,6 +21,8 @@ Models in Rabit ORM (as in other ORMs) represent a single table to work with. To
 *Example:* Model for table user, located in `models/user.php`
 
 ```php
+   use RabbitORM\Annotations\Entity;
+   use RabbitORM\Annotations\Column;
 /**
  * User model class
  * @Entity
@@ -29,6 +31,8 @@ class User extends RabbitORM\Model {
   protected $table = "user";
 }
 ```
+
+You don't need to load the classes  `RabbitORM\Annotations\Entity` and  `RabbitORM\Annotations\Column`, include only the use and the Rabbit will be responsible for loading them for you.
 
 The `$table` property is used to tell which table the model will work with. There are also several properties to customize the model configuration.
 
