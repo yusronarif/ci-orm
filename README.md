@@ -6,11 +6,20 @@ This project is a fork of elegant-orm of nazieb user, the intent of this fork is
 
 ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
 
+#Installation
+
+Download the source code and copy to your application/libraries directory
+In your config/autoload.php file, add rabbit-orm/elegant to $autoload['libraries']. So it will look like this:
+
+$autoload['libraries'] = array('rabbit-orm/Rabbitorm');
+
 ## Usage
 ### Defining Models
 Models in Rabit ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Rabbit\Model` class.
 
-*Example:* Model for table user, located in `models/user.php`
+*Example:* Model for table user, located in `models/User.php`
+
+Remember: CodeIgniter 3 adopts a Ucfirst-like filename convetion. Class `User` must be named as `User.php` and class `MyClass` must be named as `Myclass.php`. I admit that is a strange convention - I prefer CamelCase - i believe it was chosen to facilitate the location of classes in case sensitive file systems, but we have to follow the CodeIgniter Convention to maximize compatibility.
 
 ```php
 /**
