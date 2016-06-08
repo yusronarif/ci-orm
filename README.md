@@ -2,9 +2,17 @@
 
 This project is a fork of elegant-orm of nazieb user, the intent of this fork is initially make it 100% compatible with CodeIgniter 3 and MySQL 5.6+. After starts fixes and support for other databases. The project was renamed to become more independent and does not confuse users. The name was based on the speed and lightness of a rabbit.
 
-# Rabbit ORM [BETA]
+# Rabbit ORM 
 
 ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
+
+## Installation
+Download last release https://github.com/fabiocmazzo/rabbit-orm/releases 
+
+Extract to your application/libraries directory
+In your config/autoload.php file, add elegant-orm/elegant to $autoload['libraries']. So it will look like this:
+
+$autoload['libraries'] = array('rabbit-orm/Rabbitorm');
 
 ## Usage
 ### Defining Models
