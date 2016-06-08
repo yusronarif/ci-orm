@@ -37,6 +37,29 @@ ATTENTION: In this version, RabbitORM introduces PHP Annotations (uses a Doctrin
 ### Fields definition in current source code
 In current source code you must define Column for every property, this is required, unmapped fields will not be returned. This choice was made to become clearer definition of the entity in class, not bring unnecessary data from database and reduce the coupling to the database.
 
+Example:
+
+```php
+/**
+ * User model class
+ * @Entity
+ **/
+class User extends RabbitORM\Model {
+  protected $table = "user";
+  
+ /**
+  * @Column(name="id_user")
+  **/
+  public $idUser;
+  
+ /**
+  * @Column(name="s_name")
+  **/
+  public $name;
+  
+}
+```
+
 ### Model properties
 Here are some properties you can use to customize the model
 
