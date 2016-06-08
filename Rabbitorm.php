@@ -12,14 +12,27 @@ if(!defined('EXT'))
 
 class RabbitORM {
 
+	private $annotations = array('RabbitORM\Annotations\Annotation',
+								 'RabbitORM\Annotations\Entity',
+								 'RabbitORM\Annotations\Column');
+
 	private $entityAnnotation = '@Entity';
 
 	function __construct()
 	{
 		$mod_path = APPPATH . 'models' . DIRECTORY_SEPARATOR;
-		if(file_exists($mod_path)) $this->_read_model_dir($mod_path);
+		$this->loadAnnotations();
+		if(file_exists($mod_path)) { $this->_read_model_dir($mod_path); }
+
 	}
 
+
+	private function loadAnnotations() {
+		foreach($this->annotations as $annotation) {
+			$path =  str_replace("\\", DIRECTORY_SEPARATOR, $annotation) . EXT;
+			require_once $path;
+		}
+	}
 
 	/**
 	 * @param $dirpath
@@ -64,22 +77,23 @@ class RabbitORM {
 
 spl_autoload_register(function($class){
 
+
 	if(strpos($class, "RabbitORM\\") === 0)
 	{
 		$classname = str_replace("RabbitORM\\", "", $class);
-		$path = 'src/' . ucfirst(strtolower(str_replace("\\", "/", $classname)) ) . EXT;
+		$path = 'src/' . ucfirst(strtolower(str_replace("\\", DIRECTORY_SEPARATOR, $classname)) ) . EXT;
 		require_once $path;
 	}
 
 	if(strpos($class, "Doctrine\\") === 0)
 	{
-		$path =  str_replace("\\", "/", $class) . EXT;
+		$path =  str_replace("\\", DIRECTORY_SEPARATOR, $class) . EXT;
 		require_once $path;
 	}
 
 	if(strpos($class, "RabbitRobot\\") === 0)
 	{
-		$path =  str_replace("\\", "/", $class) . EXT;
+		$path =  str_replace("\\", DIRECTORY_SEPARATOR, $class) . EXT;
 		require_once $path;
 	}
 

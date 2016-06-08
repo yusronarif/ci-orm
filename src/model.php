@@ -1,5 +1,6 @@
 <?php namespace RabbitORM;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use RabbitORM\QueryBuilder;
 use RabbitORM\Result;
 use RabbitORM\Helper;
@@ -25,15 +26,51 @@ class Model {
 	// To stored loaded relation
 	protected $relations = array();
 
+	/**
+	 * All properties annotations in model class.
+	 */
+	public $propertiesAnnotations = array();
+
+	public $classAnnotations = array();
+
 	function __construct(array $newData = array())
 	{
 		$this->ci =& get_instance();
 
-		if(is_array($newData)) $this->setData( $newData );
+		if(is_array($newData)) { $this->setData( $newData ); }
 
+		$annotationReader = new AnnotationReader();
+
+		$reflectionClass = new \ReflectionClass(get_class($this));
+
+		$this->classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
+
+		foreach($reflectionClass->getProperties() as $reflectionProperty) {
+			$annotationsArray = $annotationReader->getPropertyAnnotations($reflectionProperty);
+			if (is_array($annotationsArray) && count($annotationsArray) > 0) {
+				$this->propertiesAnnotations[$reflectionProperty->getName()] = $annotationsArray;
+			}
+		}
 		// Reset variable
 		$this->exists = false;
 		$this->queryBuilder = null;
+	}
+
+	protected function getColumns($properties = array()) {
+		$columns = array();
+		// if is not empty, return only properties in array
+		if(!empty($properties)) {
+			foreach ($properties as $property) {
+				$columns[$property] = $this->propertiesAnnotations[$property]->name;
+			}
+			return $columns;
+		}
+
+		foreach($this->propertiesAnnotations as $key => $value) {
+			$columns[$key] = $value[0]->name;
+		}
+		return $columns;
+
 	}
 
 	protected function newQuery()
@@ -48,18 +85,23 @@ class Model {
 		return $this;
 	}
 
-	protected function all($columns = array())
+	protected function all($properties = array())
 	{
 		$builder = $this->newQuery();
 
-		if(!empty($columns)) $builder->select($columns);
+		$columns = $this->getColumns($properties);
+
+		if(!empty($columns)) {
+			$builder->select($columns);
+		}
 
 		$result = new Result( $this, $builder );
 		return $result->rows();
 	}
 
-	protected function get($columns = array())
+	protected function get($properties = array())
 	{
+		$columns = $this->getColumns($properties);
 		if(is_null( $this->queryBuilder )) return $this->all($columns);
 
 		if(!empty($columns)) $this->queryBuilder->select($columns);
@@ -70,11 +112,15 @@ class Model {
 		return $result->rows();
 	}
 
-	protected function first($columns = array())
+	protected function first($properties = array())
 	{
+		$columns = $this->getColumns($properties);
+
 		$builder = $this->queryBuilder ?: $this->newQuery();
 
-		if(!empty($columns)) $builder->select($columns);
+		if(!empty($columns)) {
+			$builder->select($columns);
+		}
 
 		$result = new Result( $this, $builder );
 		return $result->first();
@@ -86,17 +132,16 @@ class Model {
 		if(count($args) > 1)
 		{
 			$id = array();
-			foreach($args as $arg) $id[] = $arg;
+			foreach($args as $arg) { $id[] = $arg; }
 		}
 
 		$builder = $this->newQuery();
 
-		if(is_array($id))
+		if(is_array($id)) {
 			$builder->where_in($this->primary, $id);
-
-		else
-			$builder->where( array($this->primary => $id) );
-
+		} else {
+			$builder->where(array($this->primary => $id));
+		}
 		$result = new Result( $this, $builder );
 		return is_array($id) ? $result->rows() : $result->first();
 	}

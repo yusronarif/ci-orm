@@ -13,9 +13,9 @@ class QueryBuilder {
 		$this->table = $table;
 		$this->db_conn->from( $this->table );
 
-		if(defined('ELEGANT_DEBUG') and ELEGANT_DEBUG === true)
+		if(defined('RABBITORM_DEBUG') and RABBITORM_DEBUG === true)
 		{
-			$property_name = 'elegant_db_'.rand();
+			$property_name = 'rabbitorm_db_'.rand();
 			$ci->{$property_name} = $this->db_conn;
 		}
 	}
@@ -34,16 +34,22 @@ class QueryBuilder {
 
 	function select($columns = array())
 	{
-		if (empty($columns)) $columns = '*';
-
-		elseif (is_array($columns)) $columns = implode(', ', $columns);
-
-		$this->db_conn->select($columns);
+		if (empty($columns)) {
+			return null; // it's no allowed return all direct in QueryBuilder
+		}
+			$query = '';
+			foreach($columns as $key => $value) {
+				$query .= "$value as '$key' ";
+				if (next($columns) !== false) {
+				 $query .= ",";
+				}
+			}
+		$this->db_conn->select($query);
 	}
 
 	function insert($data)
 	{
-		$insert = $this->db_conn->insert( $this->table, $data );
+		$insert = $this->db_conn->insert($this->table, $data );
 		return ($insert !== false) ? $this->db_conn->insert_id() : false;
 	}
 
