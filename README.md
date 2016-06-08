@@ -13,12 +13,20 @@ Models in Rabit ORM (as in other ORMs) represent a single table to work with. To
 *Example:* Model for table user, located in `models/user.php`
 
 ```php
+/**
+ * User model class
+ * @Entity
+ **/
 class User extends RabbitORM\Model {
   protected $table = "user";
 }
 ```
 
 The `$table` property is used to tell which table the model will work with. There are also several properties to customize the model configuration.
+
+ATTENTION: In this version, RabbitORM introduces PHP Annotations (uses a Doctrine Annotation Reader), only classes with a @Entity annotation will be loaded.
+
+
 
 ### Model properties
 Here are some properties you can use to customize the model
