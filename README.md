@@ -34,7 +34,8 @@ The `$table` property is used to tell which table the model will work with. Ther
 
 ATTENTION: In this version, RabbitORM introduces PHP Annotations (uses a Doctrine Annotation Reader), only classes with a @Entity annotation will be loaded.
 
-
+### Fields definition in current source code
+In current source code you must define Column for every property, this is required, unmapped fields will not be returned. This choice was made to become clearer definition of the entity in class, not bring unnecessary data from database and reduce the coupling to the database.
 
 ### Model properties
 Here are some properties you can use to customize the model
