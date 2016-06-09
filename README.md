@@ -2,69 +2,31 @@
 
 This project is a fork of elegant-orm of nazieb user, the intent of this fork is initially make it 100% compatible with CodeIgniter 3 and MySQL 5.6+. After starts fixes and support for other databases. The project was renamed to become more independent and does not confuse users. The name was based on the speed and lightness of a rabbit.
 
-## About Annotations
-
-I work with Java for many years, and perhaps for this reason, has had the idea of using annotation in this project. Annotations or other object metadata are deeply missed in PHP, but thinking well and performing tests is not a good idea to simulate annotations in comments. Open a php file and parse the code to retrieve the annotations takes time and processing power. I decided to use constants to define each attribute and One constant for the definition of the entity.  They will have the suffix `definition` with JSON code.
-PS: For this particular use, constants will be implement in  camelcase convention, we will not follow the convention and set all characters in uppercase because it will be used for another purpose.
-Ex:
-
-```php
-
- class User extends RabbitORM\Model {
- 
-     const userDefinition = '{"name": "Users", "table": "users"}';
-
-     private $idUser; 
-     const idUserDefinition = '{"column":"id_user"}';
-     
-     private $FirstName; 
-     const firstNameDefinition = '{"column":"first_name"}';
-     
-     public getIdUser()...
- 
- }
-
-```
-
-I strongly encourage, although not mandatory, encapsulate the attributes. It will be very useful to work with related entities.
-
-# Rabbit ORM 
+# Rabbit ORM [BETA]
 
 ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
 
-## Installation
-Download last release https://github.com/fabiocmazzo/rabbit-orm/releases 
-
-Extract to your application/libraries directory
-In your config/autoload.php file, add elegant-orm/elegant to $autoload['libraries']. So it will look like this:
-
-$autoload['libraries'] = array('rabbit-orm/Rabbitorm');
-
 ## Usage
-### Defining Entities
-Differently from our predecessor, models in CodeIgniter are preserved. Entities shall be saved in `application/entities`.
+### Defining Models
+Models in Rabit ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Rabbit\Model` class.
 
-
-*Example:* Entity for table user, located in `entities/user.php`
+*Example:* Model for table user, located in `models/user.php`
 
 ```php
+/**
+ * User model class
+ * @Entity
+ **/
 class User extends RabbitORM\Model {
- 
-     const userDefinition = '{"name": "Users", "table": "users"}';
-
-     private $idUser; 
-     const idUserDefinition = '{"column":"id_user"}';
-     
-     private $FirstName; 
-     const firstNameDefinition = '{"column":"first_name"}';
-     
-     public getIdUser()...
- 
- }
+  protected $table = "user";
+}
 ```
 
-### Fields definition in current source code
-In current source code you must define Column for every property, this is required, unmapped fields will not be returned. This choice was made to become clearer definition of the entity in class, not bring unnecessary data from database and reduce the coupling to the database.
+The `$table` property is used to tell which table the model will work with. There are also several properties to customize the model configuration.
+
+ATTENTION: In this version, RabbitORM introduces PHP Annotations (uses a Doctrine Annotation Reader), only classes with a @Entity annotation will be loaded.
+
+
 
 ### Model properties
 Here are some properties you can use to customize the model

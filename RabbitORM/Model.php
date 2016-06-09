@@ -1,9 +1,10 @@
 <?php namespace RabbitORM;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use RabbitORM\QueryBuilder;
 use RabbitORM\Result;
 use RabbitORM\Helper;
+use RabbitORM\DefinitionReader;
+use ReflectionClass;
 
 class Model {
 	protected $ci = null;
@@ -27,11 +28,11 @@ class Model {
 	protected $relations = array();
 
 	/**
-	 * All properties annotations in model class.
+	 * All properties definitions in model class.
 	 */
-	public $propertiesAnnotations = array();
+	public $propertiesDefinition = array();
 
-	public $classAnnotations = array();
+	public $classDefinition = array();
 
 	function __construct(array $newData = array())
 	{
@@ -39,18 +40,21 @@ class Model {
 
 		if(is_array($newData)) { $this->setData( $newData ); }
 
-		$annotationReader = new AnnotationReader();
+		$reflectionClass = new ReflectionClass(get_class($this));
 
-		$reflectionClass = new \ReflectionClass(get_class($this));
-
-		$this->classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
+		$definitionReader = new DefinitionReader();
 
 		foreach($reflectionClass->getProperties() as $reflectionProperty) {
-			$annotationsArray = $annotationReader->getPropertyAnnotations($reflectionProperty);
-			if (is_array($annotationsArray) && count($annotationsArray) > 0) {
-				$this->propertiesAnnotations[$reflectionProperty->getName()] = $annotationsArray;
+			$definitionsObject = $definitionReader->getPropertyDefinition($reflectionProperty, $reflectionClass);
+
+			if(is_object($definitionsObject)) {
+				$this->propertiesDefinitions[$reflectionProperty->getName()] = $definitionsObject->column;
 			}
 		}
+
+		$this->classDefinition =  $definitionReader->getClassDefinition($reflectionClass);
+		$this->table = $this->classDefinition->table;
+
 		// Reset variable
 		$this->exists = false;
 		$this->queryBuilder = null;
@@ -61,12 +65,12 @@ class Model {
 		// if is not empty, return only properties in array
 		if(!empty($properties)) {
 			foreach ($properties as $property) {
-				$columns[$property] = $this->propertiesAnnotations[$property]->name;
+				$columns[$property] = $this->propertiesDefinition[$property]->name;
 			}
 			return $columns;
 		}
 
-		foreach($this->propertiesAnnotations as $key => $value) {
+		foreach($this->propertiesDefinition as $key => $value) {
 			$columns[$key] = $value[0]->name;
 		}
 		return $columns;
