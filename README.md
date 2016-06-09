@@ -8,9 +8,9 @@ I work with Java for many years, and perhaps for this reason, has had the idea o
 PS: For this particular use, constants will be implement in  camelcase convention, we will not follow the convention and set all characters in uppercase because it will be used for another purpose.
 Ex:
 
-```(php) 
+```php
 
- class User {
+ class User extends RabbitORM\Model {
  
      const userDefinition = '{"name": "Users", "table": "users"}';
 
@@ -41,54 +41,30 @@ In your config/autoload.php file, add elegant-orm/elegant to $autoload['librarie
 $autoload['libraries'] = array('rabbit-orm/Rabbitorm');
 
 ## Usage
-### Defining Models
-Models in Rabit ORM (as in other ORMs) represent a single table to work with. To define a model, it's about the same with non-ORM CodeIgniter, but instead of extending `CI_Model`, the ORM model should extends `Rabbit\Model` class.
+### Defining Entities
+Differently from our predecessor, models in CodeIgniter are preserved. Entities shall be saved in `application/entities`.
 
-*Example:* Model for table user, located in `models/user.php`
+
+*Example:* Entity for table user, located in `entities/user.php`
 
 ```php
-   use RabbitORM\Annotations\Entity;
-   use RabbitORM\Annotations\Column;
-/**
- * User model class
- * @Entity
- **/
 class User extends RabbitORM\Model {
-  protected $table = "user";
-}
+ 
+     const userDefinition = '{"name": "Users", "table": "users"}';
+
+     private $idUser; 
+     const idUserDefinition = '{"column":"id_user"}';
+     
+     private $FirstName; 
+     const firstNameDefinition = '{"column":"first_name"}';
+     
+     public getIdUser()...
+ 
+ }
 ```
-
-You don't need to load the classes  `RabbitORM\Annotations\Entity` and  `RabbitORM\Annotations\Column`, include only the use and the Rabbit will be responsible for loading them for you.
-
-The `$table` property is used to tell which table the model will work with. There are also several properties to customize the model configuration.
-
-ATTENTION: In this version, RabbitORM introduces PHP Annotations (uses a Doctrine Annotation Reader), only classes with a @Entity annotation will be loaded.
 
 ### Fields definition in current source code
 In current source code you must define Column for every property, this is required, unmapped fields will not be returned. This choice was made to become clearer definition of the entity in class, not bring unnecessary data from database and reduce the coupling to the database.
-
-Example:
-
-```php
-/**
- * User model class
- * @Entity
- **/
-class User extends RabbitORM\Model {
-  protected $table = "user";
-  
- /**
-  * @Column(name="id_user")
-  **/
-  public $idUser;
-  
- /**
-  * @Column(name="s_name")
-  **/
-  public $name;
-  
-}
-```
 
 ### Model properties
 Here are some properties you can use to customize the model
