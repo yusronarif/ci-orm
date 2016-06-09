@@ -2,6 +2,32 @@
 
 This project is a fork of elegant-orm of nazieb user, the intent of this fork is initially make it 100% compatible with CodeIgniter 3 and MySQL 5.6+. After starts fixes and support for other databases. The project was renamed to become more independent and does not confuse users. The name was based on the speed and lightness of a rabbit.
 
+## About Annotations
+
+I work with Java for many years, and perhaps for this reason, has had the idea of using annotation in this project. Annotations or other object metadata are deeply missed in PHP, but thinking well and performing tests is not a good idea to simulate annotations in comments. Open a php file and parse the code to retrieve the annotations takes time and processing power. I decided to use constants to define each attribute and One constant for the definition of the entity.  They will have the suffix `definition` with JSON code.
+PS: For this particular use, constants will be implement in  camelcase convention, we will not follow the convention and set all characters in uppercase because it will be used for another purpose.
+Ex:
+
+```(php) 
+
+ class User {
+ 
+     const userDefinition = '{"name": "Users", "table": "users"}';
+
+     private $idUser; 
+     const idUserDefinition = '{"column":"id_user"}';
+     
+     private $FirstName; 
+     const firstNameDefinition = '{"column":"first_name"}';
+     
+     public getIdUser()...
+ 
+ }
+
+```
+
+I strongly encourage, although not mandatory, encapsulate the attributes. It will be very useful to work with related entities.
+
 # Rabbit ORM 
 
 ORM for CodeIgniter based on Laravel's Eloquent. The Rabbit ORM brings the beauty and simplicity of working with Eloquent ORM in Laravel to CodeIgniter framework.
