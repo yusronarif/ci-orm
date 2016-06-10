@@ -21,8 +21,9 @@ class Result implements Countable, IteratorAggregate {
 	function row()
 	{
 		if($this->query->num_rows() == 0) return;
-		$row = $this->query->row_array();
-		return new Row($this->model, $row);
+		$rowData = $this->query->row_array();
+		$this->model->setData($rowData);
+		return $this->model;
 	}
 
 	function rows()
@@ -36,9 +37,8 @@ class Result implements Countable, IteratorAggregate {
 		{
 			$model = new $class;
 			$model->exists = true;
-
-			$newRow = new Row($model, $rowData);
-			$this->rows[] = $newRow;
+			$model->setData($rowData);
+			$this->rows[] = $model;
 		}
 
 		return $this;

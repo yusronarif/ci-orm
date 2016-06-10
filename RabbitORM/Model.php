@@ -12,7 +12,7 @@ class Model {
 	protected $db_group = "default";
 	protected $table = "";
 
-	protected $primary = "id";
+	protected $primary;
 	protected $incrementing = true;
 
 	protected $per_page = 20;
@@ -44,13 +44,21 @@ class Model {
 
 		$definitionReader = new DefinitionReader();
 
+		$propertiesDefinitionsArray = array();
 		foreach($reflectionClass->getProperties() as $reflectionProperty) {
 			$definitionsObject = $definitionReader->getPropertyDefinition($reflectionProperty, $reflectionClass);
 
 			if(is_object($definitionsObject)) {
-				$this->propertiesDefinitions[$reflectionProperty->getName()] = $definitionsObject->column;
+				$propertiesDefinitionsArray[$definitionsObject->name] = $definitionsObject->column;
+				if(isset($definitionsObject->primaryKey) && $definitionsObject->primaryKey == 'true') {
+					$this->primary = $definitionsObject->name;
+				}
 			}
 		}
+
+
+		$this->propertiesDefinition = $propertiesDefinitionsArray;
+
 
 		$this->classDefinition =  $definitionReader->getClassDefinition($reflectionClass);
 		$this->table = $this->classDefinition->table;
@@ -60,18 +68,27 @@ class Model {
 		$this->queryBuilder = null;
 	}
 
+
+	private function translateDataToDatabase($data) {
+		$translatedData = array();
+		foreach($data as $key => $value) {
+			$translatedData[$this->propertiesDefinition[$key]] = $value;
+		}
+		return $translatedData;
+	}
+
 	protected function getColumns($properties = array()) {
 		$columns = array();
 		// if is not empty, return only properties in array
 		if(!empty($properties)) {
 			foreach ($properties as $property) {
-				$columns[$property] = $this->propertiesDefinition[$property]->name;
+				$columns[$property] = $this->propertiesDefinition[$property];
 			}
 			return $columns;
 		}
 
 		foreach($this->propertiesDefinition as $key => $value) {
-			$columns[$key] = $value[0]->name;
+			$columns[$key] = $value;
 		}
 		return $columns;
 
@@ -159,13 +176,17 @@ class Model {
 
 	protected static function create($data)
 	{
-		if(!is_array($data) or empty($data)) return false;
+		if(!is_array($data) or empty($data)) {
+			return false;
+		}
 
 		$class = new static($data);
 		$class->save();
 
 		return $class;
 	}
+
+
 
 	protected function update($data)
 	{
@@ -182,46 +203,56 @@ class Model {
 		else return $this->queryBuilder->update($data);
 	}
 
-	protected function save()
+	public function save()
 	{
-		if(empty($this->data)) return false;
+		$this->loadData();
+
+		if(empty($this->data)) {
+			return false;
+		}
+
+
 
 		$builder = $this->newQuery();
 
 		// Do an insert statement
 		if(!$this->exists)
 		{
-			if( !$this->incrementing and empty( $this->data[ $this->primary ] ) ) return false;
+			if( !$this->incrementing and empty( $this->data[ $this->primary ] ) ) {
+				return false;
+			}
 
-			$return = $builder->insert( $this->data );
+			$return = $builder->insert( $this->translateDataToDatabase($this->data) );
 
 			if($return !== false)
 			{
 				$this->exists = true;
 
-				if( $this->incrementing )
-					$this->setData( $this->primary, $builder->insert_id() );
+				if( $this->incrementing ) {
+					$this->setData($this->primary, $builder->insert_id());
+				}
 			}
 
 			return $return;
 		}
 		else
 		{
-			$where = array($this->primary => $this->getData( $this->primary ));
-
-			return $builder->update($this->getData(), $where);
+			$where = array($this->propertiesDefinition[$this->primary] => $this->getData( $this->primary ));
+			return $builder->update($this->translateDataToDatabase($this->getData()), $where);
 		}
 	}
 
-	protected function delete()
+	public function delete()
 	{
 		if( !$this->exists and empty($this->queryBuilder) )
 		{
 			$params = func_get_args();
-			if(empty($params)) return false;
+			if(empty($params)) { return false; }
 
 			$first = reset($params);
-			if(is_array($first)) $params = $first;
+			if(is_array($first)) {
+				$params = $first;
+			}
 
 			$where = array();
 
@@ -233,11 +264,12 @@ class Model {
 
 			$builder = $this->newQuery();
 
-			if(count($where) <= 1)
+			if(count($where) <= 1) {
 				$builder->where($this->primary, reset($where));
 
-			else
+			} else {
 				$builder->where_in($this->primary, $where);
+			}
 
 			return $builder->delete();
 		}
@@ -331,16 +363,35 @@ class Model {
 		return !empty($field) ? $this->data[ $field ] : $this->data;
 	}
 
+	/**
+	 * Load data from properties
+	 */
+	private function loadData() {
+		foreach($this->propertiesDefinition as $key => $value) {
+			$reflectionClass = new ReflectionClass(get_class($this));
+			$reflectionProperty = $reflectionClass->getProperty($key);
+			$reflectionProperty->setAccessible(true);
+			$this->data[$key] = $reflectionProperty->getValue($this);
+		}
+	}
+
 	function setData($field, $value = null)
 	{
+		$reflectionClass = new ReflectionClass(get_class($this));
 		if(func_num_args() == 1 and is_array($field))
 		{
-			foreach($field as $key => $value)
-				$this->data[ $key ] = $value;
+			foreach($field as $key => $value) {
+				$this->data[$key] = $value;
+				$reflectionProperty = $reflectionClass->getProperty($key);
+				$reflectionProperty->setAccessible(true);
+				$reflectionProperty->setValue($this, $value);
+			}
+		} else {
+			$this->data[$field] = $value;
+			$reflectionProperty = $reflectionClass->getProperty($field);
+			$reflectionProperty->setAccessible(true);
+			$reflectionProperty->setValue($this, $value);
 		}
-
-		else
-			$this->data[ $field ] = $value;
 	}
 
 	function toArray()
