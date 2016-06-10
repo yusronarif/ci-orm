@@ -71,7 +71,6 @@ Here are some properties you can use to customize the model
 
 - `$table` : to define the table name. This property is mandatory to set
 - `$db_group` : to define which database group the model will connect. The groups can be found in `config/database.php`. By default it uses "default" group
-- `$primary` : to define the column name of the table's primary key. Default is "id". If your PK has other name than "id" you should change this
 - `$incrementing` : to define whether your PK is auto-increment. Default value is `true`. If you'd like to generate your Primary Key value by custom function, set this to `false`
 
 ## Querying
