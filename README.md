@@ -15,7 +15,7 @@ Ex:
      const userDefinition = '{"name": "Users", "table": "users"}';
 
      private $idUser; 
-     const idUserDefinition = '{"column":"id_user"}';
+     const idUserDefinition = '{"column":"id_user","primaryKey":"true"}';
      
      private $FirstName; 
      const firstNameDefinition = '{"column":"first_name"}';
