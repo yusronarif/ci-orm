@@ -15,10 +15,10 @@ Ex:
      const userDefinition = '{"name": "Users", "table": "users"}';
 
      private $idUser; 
-     const idUserDefinition = '{"column":"id_user","primaryKey":"true"}';
+     const idUserDefinition = '{"name":"idUser","column":"id_user","primaryKey":"true"}';
      
      private $FirstName; 
-     const firstNameDefinition = '{"column":"first_name"}';
+     const firstNameDefinition = '{"name":"firstName", "column":"first_name"}';
      
      public getIdUser()...
  
@@ -53,10 +53,10 @@ class User extends RabbitORM\Model {
      const userDefinition = '{"name": "Users", "table": "users"}';
 
      private $idUser; 
-     const idUserDefinition = '{"column":"id_user","primaryKey":"true"}';
+     const idUserDefinition = '{"name":"idUser", "column":"id_user","primaryKey":"true"}';
      
      private $FirstName; 
-     const firstNameDefinition = '{"column":"first_name"}';
+     const firstNameDefinition = '{"name":"firstName","column":"first_name"}';
      
      public getIdUser()...
  
