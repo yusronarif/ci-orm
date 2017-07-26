@@ -562,7 +562,8 @@ class Model {
 
 	function __get($field)
     {
-		if(!isset( $this->data[ $field ] )) return null;
+    	if(!isset( $this->data[ $field ] )) $value = '';
+		else
  		$value = $this->data[ $field ];
 
 		$accessor = "getAttr". Helper::camelCase( $field );
