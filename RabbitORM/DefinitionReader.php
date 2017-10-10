@@ -18,9 +18,17 @@ class DefinitionReader {
     }
 
     public function getClassDefinition(ReflectionClass $class) {
-        $jsonDefinition = $class->getConstant($class->getName() . "Definition");
+
+        $jsonDefinition = $this->isDefinitionExist($class, $class->getName());
+
+        if(!$jsonDefinition) $jsonDefinition = $this->isDefinitionExist($class, strtolower($class->getName()));
+
         return json_decode($jsonDefinition);
-   }
+   	}
+
+   	private function isDefinitionExist(ReflectionClass $class, $definition) {
+       return $class->getConstant($definition . "Definition") ?: FALSE;
+   	}
 
 
 }
