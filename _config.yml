@@ -1,0 +1,8 @@
+title: Elegant-orm
+description: ORM for CodeIgniter based on Laravel's Eloquent ORM
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-hacker
+
+gems:
+  - jekyll-mentions
